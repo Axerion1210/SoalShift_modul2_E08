@@ -20,6 +20,17 @@
       <li>Gunakan pipe</li>
       <li>Pastikan file daftar.txt dapat diakses dari text editor</li>
     </ul>
+  </li>
+  <li>Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).<br>
+  Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.
+  <br>Contoh:
+  <br>File makan_enak.txt terakhir dibuka pada detik ke-1
+  <br>Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt 
+  <br>Catatan: 
+    <ul>
+      <li>Dilarang menggunakan crontab</li>
+      <li>Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
+    </ul>
     
       #include <sys/types.h>
       #include <sys/stat.h>
@@ -85,17 +96,6 @@
         }
         exit(EXIT_SUCCESS);
       }
-  </li>
-  <li>Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).<br>
-  Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.
-  <br>Contoh:
-  <br>File makan_enak.txt terakhir dibuka pada detik ke-1
-  <br>Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt 
-  <br>Catatan: 
-    <ul>
-      <li>Dilarang menggunakan crontab</li>
-      <li>Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
-    </ul>
   </li>
   <li>Kerjakan poin i dan ii di bawah:
     <ol>
