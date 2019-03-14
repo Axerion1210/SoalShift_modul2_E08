@@ -48,7 +48,12 @@ int main() {
     stat("/home/ivan/Documents/makanan/makan_enak.txt",&filestat);
     struct tm dt2 = *localtime(&filestat.st_atime);
 
-    if(dt1.tm_sec-dt2.tm_sec<=30 && dt1.tm_min==dt2.tm_min && dt1.tm_hour==dt2.tm_hour && dt1.tm_mday==dt2.tm_mday && dt1.tm_mon==dt2.tm_mon && dt1.tm_year==dt2.tm_year)
+    int dd,dh,dm,ds;
+    dd = dt1.tm_mday-dt2.tm_mday-((dt1.tm_hour<dt2.tm_hour) ? 1 : 0);
+    dh = dt1.tm_hour-dt2.tm_hour+((dt1.tm_hour<dt2.tm_hour) ? 24 : 0)-((dt1.tm_min<dt2.tm_min) ? 1 : 0);
+    dm = dt1.tm_min-dt2.tm_min+((dt1.tm_min<dt2.tm_min) ? 60 : 0)-((dt1.tm_sec<dt2.tm_sec) ? 1 : 0);
+    ds = dt1.tm_sec-dt2.tm_sec+((dt1.tm_sec<dt2.tm_sec) ? 60 : 0);
+    if(ds<=30 && dm==0 && dh==0 && dd==0)
     {
       char filename[200];
       sprintf(filename,"/home/ivan/Documents/makanan/makan_sehat%d.txt",x);
