@@ -9,12 +9,20 @@
 int main()
 {
     char line[100];
-    FILE *cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5", "r");
+    int x;
 
+    FILE *cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
     fgets(line, 100, cmd);
     pid_t pid = strtoul(line, NULL, 10);
-    
-    kill(pid, SIGKILL);
-
     pclose(cmd);
+    while(pid!=0){
+        kill(pid, SIGKILL);
+           
+        cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
+        memset(line,0,100);            
+        fgets(line, 100, cmd);
+        pclose(cmd);
+        pid = strtoul(line, NULL, 10);
+    }
+    return 0;   
 }
