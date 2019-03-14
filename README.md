@@ -33,7 +33,7 @@
     </ul>
   
   Jawaban:<br>
-  Pada soal ini, kita memerlukan 2 variabel, yang pertama untuk mengambil waktu sekarang, yang kedua untuk mengambil waktu dari file makan_enak.txt, yang diambil adalah waktu aksesnya (waktu terakhir kali dibuka). Lalu diperlukan struct untuk masing-masing variabel, untuk mengkonversi variabel waktu menjadi kumpulan integer, kemudian dibandingkan kedua struct tersebut. Apabila selisih waktunya kurang dari 30 detik (tapi hanya tanggal,jam,menit,dan detik yang dibandingkan), maka akan dibuat file makan_sehat#.txt, # berupa angka yang terus naik dan variabel angka ini terletak di luar loop daemon agar terus update. Daemon ini berjalan setiap 5 detik, sehingga setidaknya ada 6 file makan_sehat#.txt apabila terakhir kali dibuka 30 detik yang lalu.
+  Pada soal ini, kita memerlukan daemon dan 2 variabel, yang pertama untuk mengambil waktu sekarang, yang kedua untuk mengambil waktu dari file makan_enak.txt, yang diambil adalah waktu aksesnya (waktu terakhir kali dibuka). Lalu diperlukan struct untuk masing-masing variabel, untuk mengkonversi variabel waktu menjadi kumpulan integer, kemudian dibandingkan kedua struct tersebut. Apabila selisih waktunya kurang dari 30 detik (tapi hanya tanggal,jam,menit,dan detik yang dibandingkan), maka akan dibuat file makan_sehat#.txt, # berupa angka yang terus naik dan variabel angka ini terletak di luar loop daemon agar terus update. Daemon ini berjalan setiap 5 detik, sehingga setidaknya ada 6 file makan_sehat#.txt apabila terakhir kali dibuka 30 detik yang lalu.
   </li>
   <li>Kerjakan poin i dan ii di bawah:
     <ol>
@@ -47,5 +47,9 @@
       <li>Buatlah program c untuk menghentikan program di atas.</li>
     </ol>
   NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.
+  
+  Jawaban:<br>
+  Pada poin i, kita membuat daemon. Daemon ini awalnya mengecek apakah ada directory log pada /home/(user), jika tidak ada maka dibuat directory log. Kemudian setiap 30 menit, dibuat directory dengan format dd:MM:yyyy-hh:mm di dalamnya, format ini dipasang di luar loop daemon agar file yang akan dibuat nanti tersimpan terus di folder itu setiap menitnya. Kemudian setiap menitnya file syslog pada /var/log dicopy ke file log#.log, dengan # berupa angka yang terus increment, angka ini terletak di luar loop agar terus update.
+  <br>Untuk poin ii, kita membuat program. Awalnya program akan mencari pid untuk daemon yang sedang berjalan di folder tertentu. kemudian kita menkonversi pid tersebut dari string ke unsigned long agar fungsi kill() dapat dijalankan. lalu dijalankan fungsi kill agar menghentikan daemon yang sedang berjalan, kemudian string tersebut direset untuk dicari daemon dengan nama sama berikutnya (apabila dijalankan lebih dari satu).
   </li>
 </ol>
