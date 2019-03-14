@@ -1,5 +1,4 @@
 # SoalShift_modul2_E08
-﻿# SoalShift_modul1_E08
 
 #### Bagas Yanuar Sudrajad - 05111740000074 <br> Octavianus Giovanni Yaunatan - 05111740000113
 
@@ -18,7 +17,6 @@
       <li>mengekstrak file zip tersebut.</li>
       <li>menyimpan daftar file dari folder “campur2” yang memiliki ekstensi .txt ke dalam file daftar.txt.</li>
     </ol>
-
   Catatan:
     <ul>
       <li>Gunakan fork dan exec.</li>
@@ -28,23 +26,31 @@
     </ul>
   </li>
 
-  <li>Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).
+  <li>Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).<br>
   Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.
 
   Contoh:
-  File makan_enak.txt terakhir dibuka pada detik ke-1
-  Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt
+  <br>File makan_enak.txt terakhir dibuka pada detik ke-1
+  <br>Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt
 
   Catatan: 
-  dilarang menggunakan crontab
-  Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
+  <ul>
+    <li>Dilarang menggunakan crontab</li>
+    <li>Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
+  </ul>
+  </li>
 
-  <li>Kerjakan poin a dan b di bawah:
-  Buatlah program c untuk mencatat log setiap menit dari file log pada syslog ke /home/[user]/log/[dd:MM:yyyy-hh:mm]/log#.log
-  Ket:
-  Per 30 menit membuat folder /[dd:MM:yyyy-hh:mm]
-  Per menit memasukkan log#.log ke dalam folder tersebut
-  ‘#’ : increment per menit. Mulai dari 1
-  Buatlah program c untuk menghentikan program di atas.
-  NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.</li>
+  <li>Kerjakan poin i dan ii di bawah:
+    <ol>
+      <li>Buatlah program c untuk mencatat log setiap menit dari file log pada syslog ke /home/[user]/log/[dd:MM:yyyy-hh:mm]/log#.log
+      <br>Ket:
+        <ul>
+          <li>Per 30 menit membuat folder /[dd:MM:yyyy-hh:mm]</li>
+          <li>Per menit memasukkan log#.log ke dalam folder tersebut
+              <br>‘#’ : increment per menit. Mulai dari 1</li>
+        </ul></li>
+      <li>Buatlah program c untuk menghentikan program di atas.</li>
+    </ol>
+  NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.
+  </li>
 </ol>
