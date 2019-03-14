@@ -21,7 +21,6 @@
       <li>Pastikan file daftar.txt dapat diakses dari text editor</li>
     </ul>
     
-    ```
       #include <sys/types.h>
       #include <sys/stat.h>
       #include <stdio.h>
@@ -86,8 +85,6 @@
         }
         exit(EXIT_SUCCESS);
       }
-    ```
-    
   </li>
   <li>Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).<br>
   Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.
