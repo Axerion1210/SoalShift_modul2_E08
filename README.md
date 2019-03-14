@@ -31,7 +31,8 @@
       <li>Dilarang menggunakan crontab</li>
       <li>Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
     </ul>
-    
+  
+  Jawaban:<br>
   Pada soal ini, kita memerlukan 2 variabel, yang pertama untuk mengambil waktu sekarang, yang kedua untuk mengambil waktu dari file makan_enak.txt, yang diambil adalah waktu aksesnya (waktu terakhir kali dibuka). Lalu diperlukan struct untuk masing-masing variabel, untuk mengkonversi variabel waktu menjadi kumpulan integer, kemudian dibandingkan kedua struct tersebut. Apabila selisih waktunya kurang dari 30 detik (tapi hanya tanggal,jam,menit,dan detik yang dibandingkan), maka akan dibuat file makan_sehat#.txt, # berupa angka yang terus naik dan variabel angka ini terletak di luar loop daemon agar terus update. Daemon ini berjalan setiap 5 detik, sehingga setidaknya ada 6 file makan_sehat#.txt apabila terakhir kali dibuka 30 detik yang lalu.
   </li>
   <li>Kerjakan poin i dan ii di bawah:
