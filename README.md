@@ -26,7 +26,8 @@
   Contoh:
   <br>File makan_enak.txt terakhir dibuka pada detik ke-1
   <br>Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt
-  <br>Catatan: 
+  
+  Catatan: 
   <ul>
     <li>Dilarang menggunakan crontab</li>
     <li>Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
