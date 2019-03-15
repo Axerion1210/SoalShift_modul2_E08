@@ -340,7 +340,7 @@ char filedir[200];
 
 Pada soal 5b:
 
-- Mencari pid daemon. Kita memerlukan 2 
+- Mencari pid daemon. Kita memerlukan variabel untuk mendapatkan karakter tertentu, yaitu pid untuk diconvert ke dalam variabel pid_t dengan 
 
 ```c
     char line[100];
@@ -353,6 +353,18 @@ Pada soal 5b:
 
 - Kill daemon tersebut dengan menggunakan SIGKILL.
 
+```c
+    while(pid!=0){
+        kill(pid, SIGKILL);
+```
+
 - Reset memory untuk mencari pid baru dari daemon yang sama (jika dijalankan lebih dari 1 kali). Ulangi sampai tidak ada proses daemon lagi yang berjalan.
-  
-  <br>Untuk poin ii, kita membuat program. Awalnya program akan mencari pid untuk daemon yang sedang berjalan di folder tertentu. kemudian kita menkonversi pid tersebut dari string ke unsigned long agar fungsi kill() dapat dijalankan. lalu dijalankan fungsi kill agar menghentikan daemon yang sedang berjalan, kemudian string tersebut direset untuk dicari pid daemon dengan nama sama berikutnya (apabila dijalankan lebih dari satu).
+
+```c
+	cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
+        memset(line,0,100);            
+        fgets(line, 100, cmd);
+        pclose(cmd);
+        pid = strtoul(line, NULL, 10);
+    }
+```
