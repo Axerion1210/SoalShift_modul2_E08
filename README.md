@@ -95,7 +95,7 @@ Buat daemon yang berjalan setiap 3 detik yang melakukan:
       }
   ```
 
-## Soal 3
+## SOAL 3
 
 ### Langkah-langkah
 
@@ -220,12 +220,12 @@ return 0;
 
 Buat daemon yang berjalan setiap 5 detik yang melakukan:
 
-1. Mengecek apakah file makan_enak.txt di directory /home/user/Documents/makanan pernah diakses setidaknya 30 detik yang lalu.
-2. Jika iya, maka akan membuat file makan_sehat#.txt di directory tersebut. '#' increment per 5 detik mulai dari 1.
+1. Mengecek apakah file `makan_enak.txt` di directory `/home/user/Documents/makanan` pernah diakses setidaknya 30 detik yang lalu.
+2. Jika iya, maka akan membuat file `makan_sehat#.txt` di directory tersebut. '#' increment per 5 detik mulai dari 1.
 
 ### Implementasi
 
-- Deklarasikan variabel time_t untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). Lalu deklarasikan struct tm (format waktu) untuk mengambil data waktu dari variabel time_t ke dalam kumpulan integer.
+- Deklarasikan variabel `time_t` untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). Lalu deklarasikan `struct tm` (format waktu) untuk mengambil data waktu dari `variabel time_t` ke dalam kumpulan integer.
 
 ```c
 int x = 1;
@@ -235,7 +235,7 @@ while(1) {
     struct tm dt1 = *localtime(&wkt);
 ```
 
-- Kemudian deklarasikan struct stat untuk mengambil stat (Properties jika dalam Windows) file makan_enak.txt di directory /home/user/Documents/makanan, lalu deklarasikan struct tm kedua untuk mengambil data waktu akses, yaitu st_atime, dari file makan_enak.txt.
+- Kemudian deklarasikan `struct stat` untuk mengambil stat (Properties jika dalam Windows) file `makan_enak.txt` di directory `/home/user/Documents/makanan`, lalu deklarasikan `struct tm` kedua untuk mengambil data waktu akses, yaitu `st_atime`, dari file `makan_enak.txt`.
 
 ```c
     struct stat filestat;
@@ -243,7 +243,7 @@ while(1) {
     struct tm dt2 = *localtime(&filestat.st_atime);
 ```
 
-- 
+- Kemudian hitung selisih waktu dari kedua `struct tm` (dalam potongan kode ini hanya tanggal, jam, menit, dan detik yang dibandingkan)
 
 ```c
     int dd,dh,dm,ds;
@@ -253,24 +253,33 @@ while(1) {
     ds = dt1.tm_sec-dt2.tm_sec+((dt1.tm_sec<dt2.tm_sec) ? 60 : 0);
 ```
 
-  Jawaban:<br>
-  Pada soal ini, kita memerlukan daemon dan 2 variabel, yang pertama untuk mengambil waktu sekarang, yang kedua untuk mengambil waktu dari file makan_enak.txt, yang diambil adalah waktu aksesnya (waktu terakhir kali dibuka). Lalu diperlukan struct untuk masing-masing variabel, untuk mengkonversi variabel waktu menjadi kumpulan integer, kemudian dibandingkan kedua struct tersebut. Apabila selisih waktunya kurang dari 30 detik (tapi hanya tanggal,jam,menit,dan detik yang dibandingkan), maka akan dibuat file makan_sehat#.txt, # berupa angka yang terus naik dan variabel angka ini terletak di luar loop daemon agar terus update. Daemon ini berjalan setiap 5 detik, sehingga setidaknya ada 6 file makan_sehat#.txt apabila terakhir kali dibuka 30 detik yang lalu.
-  </li>
-  <li>Kerjakan poin i dan ii di bawah:
-    <ol>
-      <li>Buatlah program c untuk mencatat log setiap menit dari file log pada syslog ke /home/[user]/log/[dd:MM:yyyy-hh:mm]/log#.log
-      <br>Ket:
-        <ul>
-          <li>Per 30 menit membuat folder /[dd:MM:yyyy-hh:mm]</li>
-          <li>Per menit memasukkan log#.log ke dalam folder tersebut
-              <br>‘#’ : increment per menit. Mulai dari 1</li>
-        </ul></li>
-      <li>Buatlah program c untuk menghentikan program di atas.</li>
-    </ol>
-  NB: Dilarang menggunakan crontab dan tidak memakai argumen ketika menjalankan program.
+- Apabila selisih waktunya kurang dari atau sama dengan 30 detik (dalam hal ini beda detik = 30 atau kurang, beda menit, jam, dan tanggal = 0), maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
+
+```c
+    if(ds<=30 && dm==0 && dh==0 && dd==0)
+    {
+      char filename[200];
+      sprintf(filename,"/home/ivan/Documents/makanan/makan_sehat%d.txt",x);
+      FILE *fPoint;
+      fPoint = fopen(filename, "a");
+      fclose(fPoint);
+      x++;
+    }
+
+    sleep(5);
+  }
+```
+## SOAL 5
+
+### Langkah-langkah
+
+1. Akses direktori te
+2. Baca entry dari direktori tersebut.
+3. Untuk masing-masing file cek apakah berekstensi .png. Jika iya pindah dan beri tambahan nama "_grey.png"
+4. Untuk otomasi proses ini, dapat dibuat daemon.
+
+### Implementasi
   
   Jawaban:<br>
   Pada poin i, kita membuat daemon. Daemon ini awalnya mengecek apakah ada directory log pada /home/(user), jika tidak ada maka dibuat directory log. Kemudian setiap 30 menit, dibuat directory dengan format dd:MM:yyyy-hh:mm di dalamnya, format ini dipasang di luar loop daemon agar file yang akan dibuat nanti tersimpan terus di folder itu setiap menitnya. Kemudian setiap menitnya file syslog pada /var/log dicopy ke file log#.log, dengan # berupa angka yang terus increment, angka ini terletak di luar loop agar terus update.
   <br>Untuk poin ii, kita membuat program. Awalnya program akan mencari pid untuk daemon yang sedang berjalan di folder tertentu. kemudian kita menkonversi pid tersebut dari string ke unsigned long agar fungsi kill() dapat dijalankan. lalu dijalankan fungsi kill agar menghentikan daemon yang sedang berjalan, kemudian string tersebut direset untuk dicari pid daemon dengan nama sama berikutnya (apabila dijalankan lebih dari satu).
-  </li>
-</ol>
