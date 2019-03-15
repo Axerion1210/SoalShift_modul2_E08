@@ -273,13 +273,86 @@ while(1) {
 
 ### Langkah-langkah
 
-1. Akses direktori te
-2. Baca entry dari direktori tersebut.
-3. Untuk masing-masing file cek apakah berekstensi .png. Jika iya pindah dan beri tambahan nama "_grey.png"
-4. Untuk otomasi proses ini, dapat dibuat daemon.
+1. Soal 5a
+	1. Buat daemon yang berjalan setiap 1 menit
+	2. Buat directory log di /home/user jika tidak ada.
+	3. Setiap 30 menit buat directory format dd:MM:yyyy-hh:mm di dalam directory log tersebut.
+	4. Copy file syslog pada /var/log ke dalam directory tersebut dengan nama log#.log. # diincrement mulai dari 1.
+2. Soal 5b
+	1. Mencari file daemon
+	2. Cari pid daemon tersebut
+	3. Kill proses daemon tersebut dengan menggunakan pid.
+	4. Ulangi jika terdapat proses daemon dengan nama yang sama yang masih berjalan.
 
 ### Implementasi
+
+Pada soal 5a:
+
+- Buat directory `log` di dalam `/home/user` jika tidak ada
+```c
+    struct stat st = {0};
+
+    if (stat("/home/ivan/log", &st) == -1) {
+        mkdir("/home/ivan/log", 0777);
+    }
+```
+
+- Di dalam directory tersebut buat folder dengan format dd:MM:yyyy-hh:mm. Format ini dapat dicari dengan menggunakan variabel time_t, mengkonversi ke dalam kumpulan integer, lalu mengambil tanggal, bulan, tahun, jam, dan menit dari waktu sekarang, lalu membuat directory tersebut. Variabel counter diset ke 0 terlebih dahulu untuk membuat directory ini setiap 30 menit, kemudian counter ini diincrement. Nama directory dan counter diletakkan di luar loop agar terus update.
+
+```c
+int x=0;
+char filedir[200]; 
+
+  while(1) {
+    .
+    .
+    .
+    if(x%30==0){
+      time_t now = (unsigned)time(NULL);
+      struct tm cur = *localtime(&now);
+      sprintf(filedir,"/home/ivan/log/%02d:%02d:%04d-%02d:%02d",cur.tm_mday,cur.tm_mon+1,cur.tm_year+1900,cur.tm_hour,cur.tm_min);
+      mkdir(filedir,0777);
+    }
+    x++;
+```
+
+- Lalu kita perlu nama dan lokasi file syslog untuk dicopy ke dalam directory dd:MM:yyyy-hh:mm (yang telah dibuat sebelumnya) berupa log#.log. # berupa angka increment yang telah dideklarasikan sebelumnya. Kemudian daemon di sleep selama 1 menit sebelum loop berjalan lagi.
+
+```c
+    char ch, dfile[100];
+    FILE *source, *target;    
+
+    char sfile[100] = "/var/log/syslog";
+    sprintf(dfile,"%s/log%d.log",filedir,x);
+
+    source = fopen(sfile,"r");
+    target = fopen(dfile,"w");
+
+    while ((ch = fgetc(source)) != EOF)
+      fputc(ch,target);
+
+    fclose(source);
+    fclose(target);
+
+    sleep(60);
+  }
+```
+
+Pada soal 5b:
+
+- Mencari pid daemon. Kita memerlukan 2 
+
+```c
+    char line[100];
+
+    FILE *cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
+    fgets(line, 100, cmd);
+    pid_t pid = strtoul(line, NULL, 10);
+    pclose(cmd);
+```
+
+- Kill daemon tersebut dengan menggunakan SIGKILL.
+
+- Reset memory untuk mencari pid baru dari daemon yang sama (jika dijalankan lebih dari 1 kali). Ulangi sampai tidak ada proses daemon lagi yang berjalan.
   
-  Jawaban:<br>
-  Pada poin i, kita membuat daemon. Daemon ini awalnya mengecek apakah ada directory log pada /home/(user), jika tidak ada maka dibuat directory log. Kemudian setiap 30 menit, dibuat directory dengan format dd:MM:yyyy-hh:mm di dalamnya, format ini dipasang di luar loop daemon agar file yang akan dibuat nanti tersimpan terus di folder itu setiap menitnya. Kemudian setiap menitnya file syslog pada /var/log dicopy ke file log#.log, dengan # berupa angka yang terus increment, angka ini terletak di luar loop agar terus update.
   <br>Untuk poin ii, kita membuat program. Awalnya program akan mencari pid untuk daemon yang sedang berjalan di folder tertentu. kemudian kita menkonversi pid tersebut dari string ke unsigned long agar fungsi kill() dapat dijalankan. lalu dijalankan fungsi kill agar menghentikan daemon yang sedang berjalan, kemudian string tersebut direset untuk dicari pid daemon dengan nama sama berikutnya (apabila dijalankan lebih dari satu).
