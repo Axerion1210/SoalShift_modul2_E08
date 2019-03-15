@@ -214,6 +214,64 @@ chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 return 0;
 ```
 
+Di atas merupakan soal 3 yang menggunakan `popen`. Berikut adalah yang menggunakan `pipe()` tanpa `popen`.
+
+```c
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <string.h>
+
+int main(){
+    int fd[2];
+    pipe(fd);
+
+    if(fork()==0){
+        close(fd[0]);
+        dup2(fd[1],1);
+        dup2(fd[1],2);
+        close(fd[1]);
+        execl("/bin/ls", "ls", "/home/siung2/modul2/campur2", (char *)NULL);
+    }else{
+        char buffer[10000]={0};
+        read(fd[0],buffer,sizeof(buffer));
+        close(fd[0]);
+        close(fd[1]);
+        chdir("/home/siung2/modul2/campur2");
+        FILE *write;
+        write = fopen ("../tes.txt", "w+");
+        fprintf(write, "%s", buffer);
+        fclose(write);
+        FILE *text;
+        text = fopen("../tes.txt", "r+");
+        write = fopen ("../daftar.txt", "w+");
+        char* ext;
+        char* s;
+        while(fgets(buffer, 200, (FILE*) text)) {
+            s= buffer;
+            ext=strrchr(s,'.');
+            if (!strcmp(ext, ".txt\n")){
+                fprintf(write, "%s", s);
+            }
+        }
+    remove("../tes.txt");
+    chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
+    fclose(text);
+    fclose(write);
+    }
+    return 0;
+}
+
+```
+
 ## SOAL 4
 
 ### Langkah-langkah
@@ -279,7 +337,7 @@ while(1) {
 4. Untuk otomasi proses ini, dapat dibuat daemon.
 
 ### Implementasi
-  
+
   Jawaban:<br>
   Pada poin i, kita membuat daemon. Daemon ini awalnya mengecek apakah ada directory log pada /home/(user), jika tidak ada maka dibuat directory log. Kemudian setiap 30 menit, dibuat directory dengan format dd:MM:yyyy-hh:mm di dalamnya, format ini dipasang di luar loop daemon agar file yang akan dibuat nanti tersimpan terus di folder itu setiap menitnya. Kemudian setiap menitnya file syslog pada /var/log dicopy ke file log#.log, dengan # berupa angka yang terus increment, angka ini terletak di luar loop agar terus update.
   <br>Untuk poin ii, kita membuat program. Awalnya program akan mencari pid untuk daemon yang sedang berjalan di folder tertentu. kemudian kita menkonversi pid tersebut dari string ke unsigned long agar fungsi kill() dapat dijalankan. lalu dijalankan fungsi kill agar menghentikan daemon yang sedang berjalan, kemudian string tersebut direset untuk dicari pid daemon dengan nama sama berikutnya (apabila dijalankan lebih dari satu).
