@@ -35,25 +35,23 @@ int main(){
         fclose(write);
         FILE *text;
         text = fopen("../tes.txt", "r+");
-        //printf("%s", buffer);
+
         write = fopen ("../daftar.txt", "w+");
         char* ext;
         char* s;
         while(fgets(buffer, 200, (FILE*) text)) {
             s= buffer;
-            //printf("%s", s);
+
             ext=strrchr(s,'.');
             if (!strcmp(ext, ".txt\n")){
-                //printf("%s", s);
+
                 fprintf(write, "%s", s);
 
             }
-            //int ext=strrchr(buffer,'.');
-            //if(ext && !strcmp(ext, ".txt")){ // jika mengandung ext
-            //printf("%s\n", buffer);}
+
         }
         remove("../tes.txt");
-	chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
+        chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 
 
     fclose(text);
