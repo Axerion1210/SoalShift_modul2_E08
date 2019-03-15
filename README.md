@@ -1,6 +1,8 @@
 # SoalShift_modul2_E08
 
-#### Bagas Yanuar Sudrajad - 05111740000074 <br> Octavianus Giovanni Yaunatan - 05111740000113
+#### Bagas Yanuar Sudrajad - 05111740000074 
+
+#### Octavianus Giovanni Yaunatan - 05111740000113
 
 ## SOAL 1
 
@@ -56,6 +58,8 @@
   closedir(dr);
   ```
 
+[Code untuk soal 1](jawaban/soal1/soal1.c)
+
 ## SOAL 2
 
 ### Langkah-langkah
@@ -94,6 +98,8 @@ Buat daemon yang berjalan setiap 3 detik yang melakukan:
           }
       }
   ```
+
+[Code untuk soal 2](jawaban/soal2/soal2.c)
 
 ## SOAL 3
 
@@ -214,6 +220,8 @@ chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 return 0;
 ```
 
+[Code untuk soal 3 dengan `popen() `](jawaban/soal1/soal1.c)
+
 Di atas adalah pengerjaan menggunakan popen. Untuk solusi yang menggunakan pipe() adalah sebagai berikut:
 
 ```c
@@ -300,7 +308,7 @@ int main(){
 }
 ```
 
-
+[Code untuk soal 3 dengan `pipe() `](jawaban/soal1/soal3.c)
 
 ## SOAL 4
 
@@ -345,6 +353,8 @@ while(1) {
     sleep(5);
   }
 ```
+[Code untuk soal 4 ](jawaban/soal1/soal4.c)
+
 ## SOAL 5
 
 ### Langkah-langkah
@@ -444,3 +454,5 @@ Pada soal 5b:
         pid = strtoul(line, NULL, 10);
     }
 ```
+
+[Code untuk soal 5 ](jawaban/soal1/soal5.c)
