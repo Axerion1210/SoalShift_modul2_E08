@@ -9,7 +9,6 @@
 int main()
 {
     char line[100];
-    int x;
 
     FILE *cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
     fgets(line, 100, cmd);
