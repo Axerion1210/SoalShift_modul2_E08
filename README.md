@@ -241,7 +241,7 @@ while(1) {
     stat("/home/ivan/Documents/makanan/makan_enak.txt",&filestat);
 ```
 
-- Gunakan fungsi `(int)difftime(waktu1,waktu2)` untuk menghitung selisih waktu sekarang dengan waktu file `makan_enak.txt` lalu diconvert ke dalam integer. Jika hasilnya kurang dari atau sama dengan 30, maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
+- Gunakan fungsi `(int)difftime(waktu1,waktu2)` untuk menghitung selisih waktu sekarang dengan waktu file `makan_enak.txt` terakhir dibuka (dengan menggunakan `st_atime`, yaitu waktu dimana file terakhir kali diakses) lalu diconvert ke dalam integer. Jika hasilnya kurang dari atau sama dengan 30, maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
 
 ```c
     if((int)difftime(wkt,filestat.st_atime)<=30)
