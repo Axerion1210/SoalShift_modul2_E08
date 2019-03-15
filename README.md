@@ -58,7 +58,7 @@
   closedir(dr);
   ```
 
-[Code untuk soal 1](jawaban/soal1/soal1.c)
+[Code untuk soal 1](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal1/soal1.c)
 
 ## SOAL 2
 
@@ -99,7 +99,7 @@ Buat daemon yang berjalan setiap 3 detik yang melakukan:
       }
   ```
 
-[Code untuk soal 2](jawaban/soal2/soal2.c)
+[Code untuk soal 2](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal2/soal2.c)
 
 ## SOAL 3
 
@@ -220,7 +220,7 @@ chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 return 0;
 ```
 
-[Code untuk soal 3 dengan `popen() `](jawaban/soal1/soal1.c)
+[Code untuk soal 3 dengan `popen() `](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal3/soal3.c)
 
 Di atas adalah pengerjaan menggunakan popen. Untuk solusi yang menggunakan pipe() adalah sebagai berikut:
 
@@ -308,7 +308,7 @@ int main(){
 }
 ```
 
-[Code untuk soal 3 dengan `pipe() `](jawaban/soal1/soal3.c)
+[Code untuk soal 3 dengan `pipe() `](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal3/soal3R.c)
 
 ## SOAL 4
 
@@ -353,7 +353,7 @@ while(1) {
     sleep(5);
   }
 ```
-[Code untuk soal 4 ](jawaban/soal1/soal4.c)
+[Code untuk soal 4 ](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal4/soal1.4)
 
 ## SOAL 5
 
@@ -455,4 +455,6 @@ Pada soal 5b:
     }
 ```
 
-[Code untuk soal 5 ](jawaban/soal1/soal5.c)
+[Code untuk soal 5 a](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal5/soal5a.c)
+
+[Code untuk soal 5 b](https://github.com/Axerion1210/SoalShift_modul2_E08/blob/master/Jawaban/soal5/soal5b.c)
