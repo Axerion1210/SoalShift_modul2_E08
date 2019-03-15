@@ -53,7 +53,7 @@ int main(){
             //printf("%s\n", buffer);}
         }
         remove("../tes.txt");
-
+	chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 
 
     fclose(text);
