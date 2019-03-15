@@ -214,64 +214,6 @@ chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 return 0;
 ```
 
-Di atas merupakan soal 3 yang menggunakan `popen`. Berikut adalah yang menggunakan `pipe()` tanpa `popen`.
-
-```c
-#include <stdlib.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-
-int main(){
-    int fd[2];
-    pipe(fd);
-
-    if(fork()==0){
-        close(fd[0]);
-        dup2(fd[1],1);
-        dup2(fd[1],2);
-        close(fd[1]);
-        execl("/bin/ls", "ls", "/home/siung2/modul2/campur2", (char *)NULL);
-    }else{
-        char buffer[10000]={0};
-        read(fd[0],buffer,sizeof(buffer));
-        close(fd[0]);
-        close(fd[1]);
-        chdir("/home/siung2/modul2/campur2");
-        FILE *write;
-        write = fopen ("../tes.txt", "w+");
-        fprintf(write, "%s", buffer);
-        fclose(write);
-        FILE *text;
-        text = fopen("../tes.txt", "r+");
-        write = fopen ("../daftar.txt", "w+");
-        char* ext;
-        char* s;
-        while(fgets(buffer, 200, (FILE*) text)) {
-            s= buffer;
-            ext=strrchr(s,'.');
-            if (!strcmp(ext, ".txt\n")){
-                fprintf(write, "%s", s);
-            }
-        }
-    remove("../tes.txt");
-    chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
-    fclose(text);
-    fclose(write);
-    }
-    return 0;
-}
-
-```
-
 ## SOAL 4
 
 ### Langkah-langkah
@@ -283,38 +225,26 @@ Buat daemon yang berjalan setiap 5 detik yang melakukan:
 
 ### Implementasi
 
-- Deklarasikan variabel `time_t` untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). Lalu deklarasikan `struct tm` (format waktu) untuk mengambil data waktu dari `variabel time_t` ke dalam kumpulan integer.
+- Deklarasikan variabel dengan tipe data `time_t` untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). 
 
 ```c
 int x = 1;
 
 while(1) {
     time_t wkt = (unsigned)time(NULL);
-    struct tm dt1 = *localtime(&wkt);
 ```
 
-- Kemudian deklarasikan `struct stat` untuk mengambil stat (Properties jika dalam Windows) file `makan_enak.txt` di directory `/home/user/Documents/makanan`, lalu deklarasikan `struct tm` kedua untuk mengambil data waktu akses, yaitu `st_atime`, dari file `makan_enak.txt`.
+- Kemudian deklarasikan variabel dengan tipe data `struct stat` untuk mengambil stat (Properties jika dalam Windows) file `makan_enak.txt` di directory `/home/user/Documents/makanan`.
 
 ```c
     struct stat filestat;
     stat("/home/ivan/Documents/makanan/makan_enak.txt",&filestat);
-    struct tm dt2 = *localtime(&filestat.st_atime);
 ```
 
-- Kemudian hitung selisih waktu dari kedua `struct tm` (dalam potongan kode ini hanya tanggal, jam, menit, dan detik yang dibandingkan)
+- Gunakan fungsi `(int)difftime(waktu1,waktu2)` untuk menghitung selisih waktu sekarang dengan waktu file `makan_enak.txt` terakhir dibuka (dengan menggunakan `st_atime`, yaitu waktu dimana file terakhir kali diakses) lalu diconvert ke dalam integer. Jika hasilnya kurang dari atau sama dengan 30, maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
 
 ```c
-    int dd,dh,dm,ds;
-    dd = dt1.tm_mday-dt2.tm_mday-((dt1.tm_hour<dt2.tm_hour) ? 1 : 0);
-    dh = dt1.tm_hour-dt2.tm_hour+((dt1.tm_hour<dt2.tm_hour) ? 24 : 0)-((dt1.tm_min<dt2.tm_min) ? 1 : 0);
-    dm = dt1.tm_min-dt2.tm_min+((dt1.tm_min<dt2.tm_min) ? 60 : 0)-((dt1.tm_sec<dt2.tm_sec) ? 1 : 0);
-    ds = dt1.tm_sec-dt2.tm_sec+((dt1.tm_sec<dt2.tm_sec) ? 60 : 0);
-```
-
-- Apabila selisih waktunya kurang dari atau sama dengan 30 detik (dalam hal ini beda detik = 30 atau kurang, beda menit, jam, dan tanggal = 0), maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
-
-```c
-    if(ds<=30 && dm==0 && dh==0 && dd==0)
+    if((int)difftime(wkt,filestat.st_atime)<=30)
     {
       char filename[200];
       sprintf(filename,"/home/ivan/Documents/makanan/makan_sehat%d.txt",x);
@@ -331,13 +261,98 @@ while(1) {
 
 ### Langkah-langkah
 
-1. Akses direktori te
-2. Baca entry dari direktori tersebut.
-3. Untuk masing-masing file cek apakah berekstensi .png. Jika iya pindah dan beri tambahan nama "_grey.png"
-4. Untuk otomasi proses ini, dapat dibuat daemon.
+1. Soal 5a
+  1. Buat daemon yang berjalan setiap 1 menit
+  2. Buat directory log di /home/user jika tidak ada.
+  3. Setiap 30 menit buat directory format dd:MM:yyyy-hh:mm di dalam directory log tersebut.
+  4. Copy file syslog pada /var/log ke dalam directory tersebut dengan nama log#.log. # diincrement mulai dari 1.
+2. Soal 5b
+  1. Mencari file daemon
+  2. Cari pid daemon tersebut
+  3. Kill proses daemon tersebut dengan menggunakan pid.
+  4. Ulangi jika terdapat proses daemon dengan nama yang sama yang masih berjalan.
 
 ### Implementasi
 
-  Jawaban:<br>
-  Pada poin i, kita membuat daemon. Daemon ini awalnya mengecek apakah ada directory log pada /home/(user), jika tidak ada maka dibuat directory log. Kemudian setiap 30 menit, dibuat directory dengan format dd:MM:yyyy-hh:mm di dalamnya, format ini dipasang di luar loop daemon agar file yang akan dibuat nanti tersimpan terus di folder itu setiap menitnya. Kemudian setiap menitnya file syslog pada /var/log dicopy ke file log#.log, dengan # berupa angka yang terus increment, angka ini terletak di luar loop agar terus update.
-  <br>Untuk poin ii, kita membuat program. Awalnya program akan mencari pid untuk daemon yang sedang berjalan di folder tertentu. kemudian kita menkonversi pid tersebut dari string ke unsigned long agar fungsi kill() dapat dijalankan. lalu dijalankan fungsi kill agar menghentikan daemon yang sedang berjalan, kemudian string tersebut direset untuk dicari pid daemon dengan nama sama berikutnya (apabila dijalankan lebih dari satu).
+Pada soal 5a:
+
+- Buat directory `log` di dalam `/home/user` jika tidak ada
+```c
+    struct stat st = {0};
+
+    if (stat("/home/ivan/log", &st) == -1) {
+        mkdir("/home/ivan/log", 0777);
+    }
+```
+
+- Di dalam directory tersebut buat folder dengan format dd:MM:yyyy-hh:mm. Format ini dapat dicari dengan menggunakan variabel time_t, mengkonversi ke dalam kumpulan integer, lalu mengambil tanggal, bulan, tahun, jam, dan menit dari waktu sekarang, lalu membuat directory tersebut. Variabel counter diset ke 0 terlebih dahulu untuk membuat directory ini setiap 30 menit, kemudian counter ini diincrement. Nama directory dan counter diletakkan di luar loop agar terus update.
+
+```c
+int x=0;
+char filedir[200]; 
+
+  while(1) {
+    .
+    .
+    .
+    if(x%30==0){
+      time_t now = (unsigned)time(NULL);
+      struct tm cur = *localtime(&now);
+      sprintf(filedir,"/home/ivan/log/%02d:%02d:%04d-%02d:%02d",cur.tm_mday,cur.tm_mon+1,cur.tm_year+1900,cur.tm_hour,cur.tm_min);
+      mkdir(filedir,0777);
+    }
+    x++;
+```
+
+- Lalu kita perlu nama dan lokasi file syslog untuk dicopy ke dalam directory dd:MM:yyyy-hh:mm (yang telah dibuat sebelumnya) berupa log#.log. # berupa angka increment yang telah dideklarasikan sebelumnya. Kemudian daemon di sleep selama 1 menit sebelum loop berjalan lagi.
+
+```c
+    char ch, dfile[100];
+    FILE *source, *target;    
+
+    char sfile[100] = "/var/log/syslog";
+    sprintf(dfile,"%s/log%d.log",filedir,x);
+
+    source = fopen(sfile,"r");
+    target = fopen(dfile,"w");
+
+    while ((ch = fgetc(source)) != EOF)
+      fputc(ch,target);
+
+    fclose(source);
+    fclose(target);
+
+    sleep(60);
+  }
+```
+
+Pada soal 5b:
+
+- Mencari pid daemon. Kita memerlukan variabel untuk mendapatkan karakter tertentu, yaitu pid untuk diconvert ke dalam variabel pid_t dengan 
+
+```c
+    char line[100];
+
+    FILE *cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
+    fgets(line, 100, cmd);
+    pid_t pid = strtoul(line, NULL, 10);
+    pclose(cmd);
+```
+
+- Kill daemon tersebut dengan menggunakan SIGKILL.
+
+```c
+    while(pid!=0){
+        kill(pid, SIGKILL);
+```
+
+- Reset memory untuk mencari pid baru dari daemon yang sama (jika dijalankan lebih dari 1 kali). Ulangi sampai tidak ada proses daemon lagi yang berjalan.
+
+```c
+	cmd = popen("pidof /home/ivan/Sisop/Praktikum2/soal5a", "r");
+        memset(line,0,100);            
+        fgets(line, 100, cmd);
+        pclose(cmd);
+        pid = strtoul(line, NULL, 10);
+    }
+```
