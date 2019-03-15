@@ -214,20 +214,45 @@ chmod("../daftar.txt",  S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH);
 return 0;
 ```
 
+## SOAL 4
 
+### Langkah-langkah
 
-<ol>
-  <li>Dalam direktori /home/[user]/Documents/makanan terdapat file makan_enak.txt yang berisikan daftar makanan terkenal di Surabaya. Elen sedang melakukan diet dan seringkali tergiur untuk membaca isi makan_enak.txt karena ngidam makanan enak. Sebagai teman yang baik, Anda membantu Elen dengan membuat program C yang berjalan setiap 5 detik untuk memeriksa apakah file makan_enak.txt pernah dibuka setidaknya 30 detik yang lalu (rentang 0 - 30 detik).<br>
-  Jika file itu pernah dibuka, program Anda akan membuat 1 file makan_sehat#.txt di direktori /home/[user]/Documents/makanan dengan '#' berisi bilangan bulat dari 1 sampai tak hingga untuk mengingatkan Elen agar berdiet.
-  <br>Contoh:
-  <br>File makan_enak.txt terakhir dibuka pada detik ke-1
-  <br>Pada detik ke-10 terdapat file makan_sehat1.txt dan makan_sehat2.txt 
-  <br>Catatan: 
-    <ul>
-      <li>Dilarang menggunakan crontab</li>
-      <li>Contoh nama file : makan_sehat1.txt, makan_sehat2.txt, dst</li>
-    </ul>
-  
+Buat daemon yang berjalan setiap 5 detik yang melakukan:
+
+1. Mengecek apakah file makan_enak.txt di directory /home/user/Documents/makanan pernah diakses setidaknya 30 detik yang lalu.
+2. Jika iya, maka akan membuat file makan_sehat#.txt di directory tersebut. '#' increment per 5 detik mulai dari 1.
+
+### Implementasi
+
+- Deklarasikan variabel time_t untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). Lalu deklarasikan struct tm (format waktu) untuk mengambil data waktu dari variabel time_t ke dalam kumpulan integer.
+
+```c
+int x = 1;
+
+while(1) {
+    time_t wkt = (unsigned)time(NULL);
+    struct tm dt1 = *localtime(&wkt);
+```
+
+- Kemudian deklarasikan struct stat untuk mengambil stat (Properties jika dalam Windows) file makan_enak.txt di directory /home/user/Documents/makanan, lalu deklarasikan struct tm kedua untuk mengambil data waktu akses, yaitu st_atime, dari file makan_enak.txt.
+
+```c
+    struct stat filestat;
+    stat("/home/ivan/Documents/makanan/makan_enak.txt",&filestat);
+    struct tm dt2 = *localtime(&filestat.st_atime);
+```
+
+- 
+
+```c
+    int dd,dh,dm,ds;
+    dd = dt1.tm_mday-dt2.tm_mday-((dt1.tm_hour<dt2.tm_hour) ? 1 : 0);
+    dh = dt1.tm_hour-dt2.tm_hour+((dt1.tm_hour<dt2.tm_hour) ? 24 : 0)-((dt1.tm_min<dt2.tm_min) ? 1 : 0);
+    dm = dt1.tm_min-dt2.tm_min+((dt1.tm_min<dt2.tm_min) ? 60 : 0)-((dt1.tm_sec<dt2.tm_sec) ? 1 : 0);
+    ds = dt1.tm_sec-dt2.tm_sec+((dt1.tm_sec<dt2.tm_sec) ? 60 : 0);
+```
+
   Jawaban:<br>
   Pada soal ini, kita memerlukan daemon dan 2 variabel, yang pertama untuk mengambil waktu sekarang, yang kedua untuk mengambil waktu dari file makan_enak.txt, yang diambil adalah waktu aksesnya (waktu terakhir kali dibuka). Lalu diperlukan struct untuk masing-masing variabel, untuk mengkonversi variabel waktu menjadi kumpulan integer, kemudian dibandingkan kedua struct tersebut. Apabila selisih waktunya kurang dari 30 detik (tapi hanya tanggal,jam,menit,dan detik yang dibandingkan), maka akan dibuat file makan_sehat#.txt, # berupa angka yang terus naik dan variabel angka ini terletak di luar loop daemon agar terus update. Daemon ini berjalan setiap 5 detik, sehingga setidaknya ada 6 file makan_sehat#.txt apabila terakhir kali dibuka 30 detik yang lalu.
   </li>
