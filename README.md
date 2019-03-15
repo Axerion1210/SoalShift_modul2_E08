@@ -225,38 +225,26 @@ Buat daemon yang berjalan setiap 5 detik yang melakukan:
 
 ### Implementasi
 
-- Deklarasikan variabel `time_t` untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). Lalu deklarasikan `struct tm` (format waktu) untuk mengambil data waktu dari `variabel time_t` ke dalam kumpulan integer.
+- Deklarasikan variabel dengan tipe data `time_t` untuk mengambil waktu sekarang, dan sebuah variabel counter (variabel counter terletak di luar loop). 
 
 ```c
 int x = 1;
 
 while(1) {
     time_t wkt = (unsigned)time(NULL);
-    struct tm dt1 = *localtime(&wkt);
 ```
 
-- Kemudian deklarasikan `struct stat` untuk mengambil stat (Properties jika dalam Windows) file `makan_enak.txt` di directory `/home/user/Documents/makanan`, lalu deklarasikan `struct tm` kedua untuk mengambil data waktu akses, yaitu `st_atime`, dari file `makan_enak.txt`.
+- Kemudian deklarasikan variabel dengan tipe data `struct stat` untuk mengambil stat (Properties jika dalam Windows) file `makan_enak.txt` di directory `/home/user/Documents/makanan`.
 
 ```c
     struct stat filestat;
     stat("/home/ivan/Documents/makanan/makan_enak.txt",&filestat);
-    struct tm dt2 = *localtime(&filestat.st_atime);
 ```
 
-- Kemudian hitung selisih waktu dari kedua `struct tm` (dalam potongan kode ini hanya tanggal, jam, menit, dan detik yang dibandingkan)
+- Gunakan fungsi `(int)difftime(waktu1,waktu2)` untuk menghitung selisih waktu sekarang dengan waktu file `makan_enak.txt` lalu diconvert ke dalam integer. Jika hasilnya kurang dari atau sama dengan 30, maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
 
 ```c
-    int dd,dh,dm,ds;
-    dd = dt1.tm_mday-dt2.tm_mday-((dt1.tm_hour<dt2.tm_hour) ? 1 : 0);
-    dh = dt1.tm_hour-dt2.tm_hour+((dt1.tm_hour<dt2.tm_hour) ? 24 : 0)-((dt1.tm_min<dt2.tm_min) ? 1 : 0);
-    dm = dt1.tm_min-dt2.tm_min+((dt1.tm_min<dt2.tm_min) ? 60 : 0)-((dt1.tm_sec<dt2.tm_sec) ? 1 : 0);
-    ds = dt1.tm_sec-dt2.tm_sec+((dt1.tm_sec<dt2.tm_sec) ? 60 : 0);
-```
-
-- Apabila selisih waktunya kurang dari atau sama dengan 30 detik (dalam hal ini beda detik = 30 atau kurang, beda menit, jam, dan tanggal = 0), maka akan membuat file `makan_sehat#.txt`, '#' adalah variabel counter yang sudah disiapkan sebelumnya di luar loop, setelah selesai dibuat, variabel counter diincrement. Terakhir sleep program selama 5 detik sebelum loop.
-
-```c
-    if(ds<=30 && dm==0 && dh==0 && dd==0)
+    if((int)difftime(wkt,filestat.st_atime)<=30)
     {
       char filename[200];
       sprintf(filename,"/home/ivan/Documents/makanan/makan_sehat%d.txt",x);
